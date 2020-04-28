@@ -1,0 +1,163 @@
+# Encabezado: cargar librerías
+%matplotlib inline
+import numpy as np                # Librería para funciones matemáticas
+import matplotlib.pyplot as plt   # Librería para graficos
+import matplotlib.cm as cm        # Módulo para controlar mapas de colores
+from mpl_toolkits.mplot3d import Axes3D   # Módulo 3D
+
+# Graficar una función
+
+x = np.linspace(0,2*np.pi,100)
+y = np.sin(x)
+plt.plot(x,y)
+
+# Esta instrucción muestra el gráfico. El último gráfico siempre se muestra
+plt.show()
+
+# Se pueden poner varios gráficos juntos
+
+x = np.linspace(0,2*np.pi,100)
+y = np.sin(x)
+plt.plot(x,y,label="$\sin(x)$")
+plt.plot(x,x,label="x")
+plt.plot(x,x-x**3/3,label="$x-x^3/3$")
+plt.plot(x,x-x**3/6,label="$x-x^3/3$")
+plt.plot(x,x-x**3/5+x**5/120,label="$x-x^3/3+x^5/120$")
+# Fija el rango graficado
+plt.ylim(-2,2)
+plt.xlim(0,10)
+plt.title("Convergencia de la serie de Taylor para la función $\sin(x)$ ")
+# Muestra las leyendas
+plt.legend()
+plt.show()
+
+# También se puede guardar el gráfico como un archivo de imágen
+plt.savefig("taylor.png")
+
+plt.savefig("taylor.pdf")
+
+#graficos de dispersion
+
+xs = np.linspace(-5,5,100)
+normal = np.exp(-x**2/2)
+xpositivas = np.array([x if x>0 else 0 for x in xs])
+poisson = np.exp(-2*xpositivas) * xpositivas/.25
+plt.scatter(xs, normal, label="curva normal", color="red", marker="*")
+plt.scatter(xs, poisson, label="curva binomial", color="blue", marker=".")
+plt.legend()
+
+# Graficar una curva paramétrica en dos dimensiones
+
+t = np.linspace(0,10*np.pi,100)
+
+x = t * np.cos(t)
+y = t * np.sin(t)
+plt.plot(x,y)
+
+# Graficar una curva paramétrica en tres dimensiones
+
+# Genera una lista de valores para el parámetro
+t = np.linspace(0,10*np.pi,100)
+
+# Genera la curva
+x = t * np.cos(t)
+y = t * np.sin(t)
+z = t
+
+# Construye la figura y el sistema de ejes
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+
+# Grafica la curva paramétrica
+ax.plot(x, y, z, label='parametric curve 1')
+ax.plot(x, z, y, label='parametric curve 2')
+ax.legend()
+
+# Graficar una superficie paramétrica en tres dimensiones
+
+u = np.linspace(0,np.pi,100)
+v = np.linspace(0,2*np.pi,100)
+
+# Construye a partir del par de parámetros, una grilla con los valores
+U, V =np.meshgrid(u, v)
+
+
+# A partir de la grilla, construye el conjunto de puntos. En este caso, una esfera.
+x = np.sin(U)*np.cos(V)
+y = np.sin(U)*np.sin(V)
+z = np.cos(U)
+
+# Construye la figura y los ejes
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+
+# Plotea una superficie (llena)
+ax.plot_surface(x, y, z, color="orange")
+
+# Acá construimos un hiperboloide
+
+x = np.sinh(.5*U)*np.cos(V)
+y = np.sinh(.5*U)*np.sin(V)
+z = np.cosh(.5*U)
+
+# Ploteamos una gráfica de alambres (sin relleno)
+ax.plot_wireframe(x, y, z, label='hiperboloide',color="red")
+
+ax.legend()
+
+#graficos alimetricos
+
+u = np.linspace(-np.pi,np.pi,100)
+v = np.linspace(-np.pi,np.pi,100)
+
+# Construye a partir del par de parámetros, una grilla con los valores
+x, y =np.meshgrid(u, v)
+z = np.cos(U)*np.sin(V)
+
+plt.pcolor(x,y,z,cmap=cm.coolwarm)
+
+plt.show()
+plt.contour(x,y,z,cmap=cm.coolwarm)
+
+plt.show()
+plt.contourf(x,y,z,cmap=cm.coolwarm)
+
+#Campos vectoriales
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+
+# Make the grid
+x, y, z = np.meshgrid(np.arange(-0.8, 1, 0.2),
+                      np.arange(-0.8, 1, 0.2),
+                      np.arange(-0.8, 1, 0.8))
+
+# Make the direction data for the arrows
+u = np.sin(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z)
+v = -np.cos(np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z)
+w = (np.sqrt(2.0 / 3.0) * np.cos(np.pi * x) * np.cos(np.pi * y) *
+     np.sin(np.pi * z))
+
+ax.quiver(x, y, z, u, v, w, length=0.1, normalize=True)
+
+plt.show()
+
+fig = plt.figure(figsize=(8,8))
+ax = fig.gca(projection='3d')
+
+# Make the grid
+theta, phi = np.meshgrid(np.arange(0, 3.1416, 0.1), np.arange(-3.1415, 3.1416, 0.2))
+theta2, phi2 = np.meshgrid(np.arange(0, 3.1416, 0.5), np.arange(-3.1415, 3.1416, 0.5))
+xs = np.sin(theta)*np.cos(phi)
+ys = np.sin(theta)*np.sin(phi)
+zs = np.cos(theta)
+
+xs2 = np.sin(theta2)*np.cos(phi2)
+ys2 = np.sin(theta2)*np.sin(phi2)
+zs2 = np.cos(theta2)
+
+ax.plot_surface(xs,ys,zs)
+size = 3
+ax.quiver(xs2, ys2, zs2, size*xs2, size*ys2, size*zs2, length=0.1, normalize=False,color="red")
+
+plt.show()
